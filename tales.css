@@ -1,0 +1,44 @@
+
+@font-face{font-family:"Futura"; src:url("/futura.ttf") format("truetype");}
+
+table.paragraph { padding: 0px 0px 0px 0px; cursor: pointer;}
+
+div.book-title {  font-size: 36pt;  }
+div.author {  font-size: 24pt;  }
+
+div.chapter-link { cursor:pointer; font-size:20pt; padding:5px 40px 5px 40px; }
+div.chapter-link:hover { background-color:#111; }
+
+div.page-button { cursor:pointer; padding:5px 10px 5px 10px; }
+div.page-button:hover { background-color:#222; }
+
+body { font-family:"Futura"; background:black; color:white; padding:20px; }
+
+h1 { font-weight: normal; }
+
+div.p-text { font-size: 16pt; padding:5px; margin:0px; }
+div.p-text:hover { background-color:#111; }
+
+div.p-text-detail { font-size: 16pt; padding:5px; margin:0px; cursor:default; }
+
+div.word-p { font-size: 16pt; padding:5px; margin:0px; cursor:pointer; }
+div.word-p:hover { background-color:#111; }
+div.word-p-current { font-size: 16pt; padding:5px; margin:0px; cursor:default; }
+
+span.w:hover { background-color:#222; cursor:pointer;  }
+
+span.sw { background-color:#334; }
+
+div.chapter-with-word { font-size: 16pt; }
+div.paragraphs-with-word { padding:0px 0px 20px 20px; }
+
+a { color: white; text-decoration:none; }
+
+div.index-link {  font-size: 20pt; padding:5px 40px 5px 40px; }
+div.index-link:hover {  background-color:#111; }
+
+table.word-frequency {  font-size: 14pt; }
+tr.word-link {  padding:2px; cursor:pointer; }
+tr.word-link:hover {  background-color:#111; }
+
+/* div.p-text { font-size:large; } */
