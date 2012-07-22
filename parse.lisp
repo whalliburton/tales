@@ -21,7 +21,11 @@
               (list :page
                     (let ((raw (string-trim '(#\[ #\]) (last1 el))))
                      (parse-integer raw :start (position #\space raw :from-end t))))
-              (list :p (third el)))
+              (cons :p (iter (for pel in (cddr el))
+                             (collect
+                                 (if (consp pel)
+                                   (cons (first pel) (cddr pel))
+                                   pel)))))
           into chapter))))
    (finally
     (return (nconc chapters (list chapter))))))

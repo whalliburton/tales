@@ -29,18 +29,29 @@
   (deck:node-after parent id))
 
 (defun split-paragraph (text)
-  (iter (with rtn)
-        (for char in-string text)
-        (if (alphanumericp char)
-          (collect char into acc)
-          (progn
-            (when acc
-              (push (coerce acc 'string) rtn)
-              (setf acc nil))
-            (push (coerce (list char) 'string) rtn)))
-        (finally
-         (when acc (push (coerce acc 'string) rtn))
-         (return (nreverse rtn)))))
+  (macrolet ((push-rtn (el) `(push (coerce (nreverse ,el) 'string) rtn)))
+    (iter (with rtn)
+          (with in-bracket)
+          (with acc)
+          (for char in-string text)
+          (cond
+            ((or (alphanumericp char) (and in-bracket (char/= char #\>)))
+             (push char acc))
+            ((char= char #\<)
+             (when acc (push-rtn acc))
+             (setf acc (list char) in-bracket t))
+            ((char= char #\>)
+             (push char acc)
+             (push-rtn acc)
+             (setf acc nil in-bracket nil))
+            (t
+             (when acc
+               (push-rtn acc)
+               (setf acc nil))
+             (push-rtn (list char))))
+          (finally
+           (when acc (push-rtn acc))
+           (return (nreverse rtn))))))
 
 (defparameter *ignore-words* '("in" "a" "or" "the" "of" "is" "and" "but" "not" "at" "if"))
 
@@ -76,7 +87,7 @@
             (let ((paragraph-count 0))
               (iter (for el in raw)
                     (when (eq (first el) :p)
-                      (let* ((text (second el))
+                      (let* ((text (build-paragraph-text (cdr el)))
                              (paragraph (deck:add-node
                                          "paragraph" `(("text" ,text)
                                                        ("chapter" ,(id chapter))
@@ -92,6 +103,18 @@
                                     (deck:set-field edge "count" (1+ (field-value edge "count")))
                                     ))))))))))))
 
+(defun build-paragraph-text (elements)
+  (with-output-to-string (stream)
+    (iter (for el in elements)
+          (if (stringp el)
+            (princ el stream)
+            (ecase (first el)
+              (:i (format stream "<i>~A</i>" (second el)))
+              ;; (:small (format stream
+              ;;                 "<span style=\"font-variant:small-caps;\">~A</span>" (second el)))
+              (:small (format stream "<small>~A</small>" (second el)))
+              )))))
+
 (defun list-chapters () (deck:search "chapter"))
 
 (defun delete-chapter (chapter-id)
@@ -103,7 +126,7 @@
   (id fields-base))
 
 (defun clear-build ()
-  (iter (for chapter in (mapcan #'deck:search '("book" "chapter" "paragraph" "sentence" "word")))
-        (deck:delete-node (id chapter)))
-  (setf *word-ids* (make-hash-table :test 'equal)))
+  (iter (for type in '("book" "chapter" "paragraph" "sentence" "word"))
+        (deck:delete-all (id (deck::get-template type)))
+  (setf *word-ids* (make-hash-table :test 'equal))))
 

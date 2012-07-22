@@ -25,19 +25,46 @@
   (let ((alphabetical (sort
                        (iter (for (k v) in-hashtable *word-frequency*)
                              (collect (list k v)))
-                       #'string< :key #'first)))
+                       #'dictionary< :key #'first)))
     (if sort-by-frequency
       (stable-sort alphabetical #'< :key #'second)
       alphabetical)))
+
+(defun dictionary< (a b)
+  (flet ((try (el) (handler-case (parse-integer el) (error () nil))))
+    (let ((ai (try a))
+          (bi (try b)))
+      (if ai
+        (if bi
+          (< ai bi)
+          t)
+        (if bi
+          nil
+          (string< a b))))))
+
+(defvar *words-alphabetical* nil)
+(defvar *words-by-frequency* nil)
+
+(defun initialize-word-lists ()
+  (create-words-index)
+  (setf *words-alphabetical* (list-word-frequency)
+        *words-by-frequency* (list-word-frequency t)))
 
 (defun render-words-index (sort)
   (render-page
    "Words Index"
    (:h1 "Words")
+   (create-button-strip stream
+                        `(("contents" "go(\"/\");")
+                          ("alphabetical" "go(\"/words?sort=alpha\");")
+                          ("by frequency" "go(\"/words?sort=freq\");")))
+   (:br)
    (:table :class "word-frequency"
-    (iter (for (word frequency) in (list-word-frequency))
-          (htm (:tr :class "word-link"
-                    :onclick (format nil "visit(\"~A\");" (get-word-id word))
-                    (:td (esc word))
-                    (:td (str frequency))))))))
+           (iter (for (word frequency) in (if (and sort (string= sort "freq"))
+                                            *words-by-frequency*
+                                            *words-alphabetical*))
+                 (htm (:tr :class "word-link"
+                           :onclick (format nil "visit(\"~A\");" (get-word-id word))
+                           (:td (esc word))
+                           (:td (str frequency))))))))
 

@@ -61,9 +61,16 @@
             :onmouseout (format nil "hide(\"pc-~A\");" (id paragraph))
             :onclick (format nil "visit(\"~A\");" (id paragraph))
             (:tr
-             (:td (:div :class "p-text" :style "width:800px;" (esc (field-value paragraph "text"))))
+             (:td (:div :class "p-text" :style "width:800px;"
+                        (str (escape-non-tags (field-value paragraph "text")))))
              ;;               (:td (paragraph-controls paragraph stream))
              ))))
+
+(defun escape-non-tags (string)
+  (cl-who:escape-string string :test
+                        (lambda (char)
+                          (or (find char "&'\"")
+                              (> (char-code char) 127)))))
 
 (defun paragraph-controls (paragraph stream)
   (with-html-output (stream)
@@ -76,7 +83,7 @@
 (defun render-paragraph-page (paragraph index word)
   (let* ((text (field-value paragraph "text")))
     (render-page
-     (princ-with-ellipses-to-string text 40)
+     (cl-who:escape-string (princ-with-ellipses-to-string text 40))
      (page-controls paragraph stream)
      (:br)
      (let ((word (render-paragraph-detail paragraph stream index word)))
@@ -93,10 +100,12 @@
                     ((or (and word (string-equal el word)) (and index (= index count)))
                      (htm (:span :class "sw" (esc el)))
                      (setf index-word el))
-                    ((and (> (length el) 1) (not (member el *ignore-words* :test #'string=)))
+                    ((and (> (length el) 1) (not (member el *ignore-words* :test #'string=))
+                          (not (char= (char el 0) #\<)))
                      (htm (:span :class "w"
                                  :onclick (format nil "word(~A,~A);" (id paragraph) count)
                                  (esc el))))
+                    ((char= (char el 0) #\<) (str el))
                     (t (esc el))))))
     (or word index-word)))
 
@@ -137,6 +146,7 @@
                 (for count from 1)
                 (cond
                   ((string-equal el word) (htm (:span :class "sw" (esc el))))
+                  ((char= (char el 0) #\<) (str el))
                   (t (esc el)))))))
 
 (defun render-word-detail (word stream)

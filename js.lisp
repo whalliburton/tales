@@ -104,6 +104,8 @@
      (defun word-text (id index)
        (setf (@ window location) (+ "/?id=" id "&word=" index)))
 
+     (defun go (url) (setf (@ window location) url))
+
      )))
 
 (defun js-file () *js-file*)
