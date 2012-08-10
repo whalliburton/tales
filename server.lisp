@@ -40,7 +40,7 @@
              (render-paragraph-page node (and index (parse-integer index)) word))
             ((template-is-type-of template-id "demo:word") (render-word-page node))
             (t (error "Invalid ID ~A." id))))
-        (render-book (deck:get-node *tales-book*))))))
+        (render-book-page (deck:get-node *tales-book*))))))
 
 (hunchentoot:define-easy-handler (words-index :uri "/words") (sort)
   (render-words-index sort))
