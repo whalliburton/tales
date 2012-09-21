@@ -24,6 +24,13 @@ a vector of octets."
   (with-input-from-file (f filename :element-type '(unsigned-byte 8))
     (slurp-stream f)))
 
+(defun slurp-lines (filename &optional external-format)
+  (with-open-file (f filename :direction :input :if-does-not-exist :error
+                     :external-format (or external-format :utf8))
+    (iter (for line = (read-line f nil))
+          (while line)
+          (collect line))))
+
 (defun last1 (list)
   (car (last list)))
 
@@ -33,3 +40,14 @@ a vector of octets."
       list
       (list list)))
 
+(defun group (source n)
+  (when (zerop n) (error "zero length"))
+  (labels ((rec (source acc)
+             (let ((rest (nthcdr n source)))
+               (if (consp rest)
+                 (rec rest (cons
+                            (subseq source 0 n)
+                            acc))
+                 (nreverse
+                  (cons source acc))))))
+    (when source (rec source nil))))

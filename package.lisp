@@ -3,7 +3,7 @@
   (:use common-lisp deck-client iterate)
   (:import-from sb-thread with-mutex)
   (:import-from cl-who with-html-output-to-string with-html-output htm str esc fmt)
-  (:import-from alexandria with-input-from-file)
+  (:import-from alexandria with-input-from-file when-let)
   (:import-from hunchentoot session-value session-db-lock session-db *session*
                 *catch-errors-p*)
   (:import-from local-time now)

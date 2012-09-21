@@ -5,6 +5,7 @@
                (:file "utility")
                (:file "parse")
                (:file "build")
+               (:file "parts-of-speech")
                (:file "render")
                (:file "words")
                (:file "server")
