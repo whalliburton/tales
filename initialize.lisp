@@ -6,5 +6,4 @@
  deck-uses-sharder                  nil)
 
 (defun initialize ()
-  (start-tales)
-  (deck-client:connect-to-deck))
+  (start-tales))

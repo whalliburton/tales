@@ -12,3 +12,5 @@
 (defpackage tales-js
   (:use common-lisp parenscript)
   (:export js-file))
+
+(deck-client:connect-to-deck)
