@@ -47,7 +47,7 @@
 (defun pos (word)
   (gethash word *stem-dict*))
 
-(defun load-stem-dict (&optional (filename (tales-file "documents/stem-dict.txt")))
+(defun load-pos-dict (&optional (filename (tales-file "documents/stem-dict.txt")))
   (setf *stem-dict* (make-hash-table :test 'equal) *valid-tags* nil)
   (iter (for line in (slurp-lines filename :latin-1))
         (multiple-value-bind (stem pos) (parse-stem-line line)

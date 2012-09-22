@@ -6,4 +6,8 @@
  deck-uses-sharder                  nil)
 
 (defun initialize ()
+  (load-pos-dict)
+  (start-session)
+  (build)
+  (initialize-word-lists)
   (start-tales))
