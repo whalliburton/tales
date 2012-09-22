@@ -42,5 +42,5 @@
             (t (error "Invalid ID ~A." id))))
         (render-book-page (deck:get-node *tales-book*))))))
 
-(hunchentoot:define-easy-handler (words-index :uri "/words") (sort)
-  (render-words-index sort))
+(hunchentoot:define-easy-handler (words-index :uri "/words") (sort pos)
+  (render-words-index sort pos))

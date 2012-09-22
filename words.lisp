@@ -50,14 +50,20 @@
   (setf *words-alphabetical* (list-word-frequency)
         *words-by-frequency* (list-word-frequency t)))
 
-(defun render-words-index (sort)
+(defun pos-string (word)
+  (let ((pos (pos word)))
+    (or (second (assoc word pos :test 'string-equal))
+        (format nil "~{~A~^,~}" (mapcar 'second pos)))))
+
+(defun render-words-index (sort show-pos)
   (render-page
    "Words Index"
    (:h1 "Words")
    (create-button-strip stream
                         `(("contents" "go(\"/\");")
                           ("alphabetical" "go(\"/words?sort=alpha\");")
-                          ("by frequency" "go(\"/words?sort=freq\");")))
+                          ("by frequency" "go(\"/words?sort=freq\");")
+                          ("show pos" "go(\"/words?pos=true\");")))
    (:br)
    (:table :class "word-frequency"
            (iter (for (word frequency) in (if (and sort (string= sort "freq"))
@@ -66,5 +72,6 @@
                  (htm (:tr :class "word-link"
                            :onclick (format nil "visit(\"~A\");" (get-word-id word))
                            (:td (esc word))
-                           (:td (str frequency))))))))
+                           (:td (str frequency))
+                           (:td (esc (if show-pos (pos-string word) "")))))))))
 
