@@ -14,7 +14,7 @@
   (deck:add-node-template "paragraph" '(("text" :string) ("chapter" :integer) ("number" :integer)))
   (deck:add-node-template "sentence" '(("text" :string)))
   (deck:add-node-template "phrase" '(("text" :string)))
-  (deck:add-node-template "word" '(("text" :string)))
+  (deck:add-node-template "word" '(("text" :string) ("pos" :any)))
   (deck:add-edge-template "child" nil nil
                           :fields '(("count" :integer :default 1))
                           :insert-into-list t :reverse-name "parent"))
@@ -65,7 +65,8 @@
 (defun get-word-id (word)
   (let ((word (string-downcase word)))
     (or (gethash word *word-ids*)
-        (setf (gethash word *word-ids*) (deck:add-node "word" `(("text" ,word)))))))
+        (setf (gethash word *word-ids*) (deck:add-node "word" `(("text" ,word)
+                                                                ("pos" ,(pos word))))))))
 
 (define-condition edge-already-exists (deck-client::rpc-error) ())
 
