@@ -22,7 +22,7 @@
          (render-chapter chapter stream))
    (:br)
    (:h1 "Indexes")
-   (:div :class "index-link" (:a :href "/words" "Words"))))
+   (:div :class "index-link" :onclick "go(\"/words\");" "Words")))
 
 (defun render-chapter (chapter stream)
   (with-html-output (stream)

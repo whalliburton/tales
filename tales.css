@@ -34,7 +34,7 @@ div.paragraphs-with-word { padding:0px 0px 20px 20px; }
 
 a { color: white; text-decoration:none; }
 
-div.index-link {  font-size: 20pt; padding:5px 40px 5px 40px; }
+div.index-link {  cursor:pointer; font-size: 20pt; padding:5px 40px 5px 40px; }
 div.index-link:hover {  background-color:#111; }
 
 table.word-frequency {  font-size: 14pt; }
