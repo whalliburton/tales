@@ -28,14 +28,23 @@
 (defun fetch-next (parent id)
   (deck:node-after parent id))
 
+;; (defun test-split ()
+;;   (iter (for p in (deck:search "paragraph"))
+;;         (split-paragraph (deck::field-value p "text"))))
+
 (defun split-paragraph (text)
   (macrolet ((push-rtn (el) `(push (coerce (nreverse ,el) 'string) rtn)))
     (iter (with rtn)
           (with in-bracket)
           (with acc)
-          (for char in-string text)
+          (for (char next-char) on (coerce text 'list))
           (cond
-            ((or (alphanumericp char) (and in-bracket (char/= char #\>)))
+            ((or (alphanumericp char)
+                 (char= char #\-)
+                 (and (char= char #\,) next-char (digit-char-p next-char))
+                 ;; handle apostrophes inside single quoted names
+                 (and (char= char #\') next-char (char= next-char #\s))
+                 (and in-bracket (char/= char #\>)))
              (push char acc))
             ((char= char #\<)
              (when acc (push-rtn acc))
