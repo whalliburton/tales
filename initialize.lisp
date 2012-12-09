@@ -6,6 +6,7 @@
  deck-uses-sharder                  nil)
 
 (defun initialize ()
+  (setf hunchentoot:*catch-errors-p* nil)
   (load-pos-dict)
   (start-session)
   (build)
