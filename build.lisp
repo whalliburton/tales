@@ -37,6 +37,7 @@
     (iter (with rtn)
           (with in-bracket)
           (with acc)
+          (with prev-char)
           (for (char next-char) on (coerce text 'list))
           (cond
             ((or (alphanumericp char)
@@ -44,6 +45,9 @@
                  (and (char= char #\,) next-char (digit-char-p next-char))
                  ;; handle apostrophes inside single quoted names
                  (and (char= char #\') next-char (char= next-char #\s))
+                 ;; handle double quotes inside single quoted names
+                 (and (char= char #\") next-char (char= next-char #\-))
+                 (and (char= char #\") prev-char (char= prev-char #\-))
                  (and in-bracket (char/= char #\>)))
              (push char acc))
             ((char= char #\<)
@@ -58,6 +62,7 @@
                (push-rtn acc)
                (setf acc nil))
              (push-rtn (list char))))
+          (setf prev-char char)
           (finally
            (when acc (push-rtn acc))
            (return (nreverse rtn))))))
