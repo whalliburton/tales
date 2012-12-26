@@ -73,5 +73,7 @@
                            :onclick (format nil "visit(\"~A\");" (get-word-id word))
                            (:td (esc word))
                            (:td (str frequency))
-                           (:td (esc (if show-pos (pos-string word) "")))))))))
-
+                           (:td (esc (if show-pos (pos-string word) "")))))))
+   (when show-pos
+     (htm (:br) (:h2 "Parts of Speech Key"))
+     (print-pos-tags :html t :stream stream))))

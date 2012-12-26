@@ -39,10 +39,14 @@
     ("WP$"  "Wh-pronoun, possessive")
     ("WRB"  "Wh-adverb")))
 
-(defun print-pos-tags ()
+(defun print-pos-tags (&key html (stream t))
+  (when html (format stream "<table class='postags'>~%"))
   (iter (for tag in *valid-tags*)
         (when-let (description (assoc tag *tag-descriptions* :test #'string= ))
-          (format t "~4A  ~A~%" tag (second description)))))
+          (if html
+            (format stream "<tr><td>~A</td><td>~A</td></tr>~%" tag (second description))
+            (format stream "~4A  ~A~%" tag (second description)))))
+  (when html (format stream "</table>~%")))
 
 (defun pos (word)
   (gethash word *stem-dict*))
