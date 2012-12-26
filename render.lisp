@@ -33,8 +33,8 @@
   (with-html-output (stream)
     (:table
      (:tr
-      (iter (for (name onclick) in description)
-            (htm (:td (:div :class "page-button"
+      (iter (for (name onclick selected) in description)
+            (htm (:td (:div :class (if selected "page-button-selected" "page-button")
                             :onclick onclick (str name)))))))))
 
 (defun page-controls (node stream)

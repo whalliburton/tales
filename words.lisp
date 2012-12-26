@@ -61,9 +61,11 @@
    (:h1 "Words")
    (create-button-strip stream
                         `(("contents" "go(\"/\");")
-                          ("alphabetical" "go(\"/words?sort=alpha\");")
-                          ("by frequency" "go(\"/words?sort=freq\");")
-                          ("show pos" "go(\"/words?pos=true\");")))
+                          ("alphabetical" "go(\"/words?sort=alpha\");"
+                                          ,(or (and (null sort) (null show-pos))
+                                               (equal sort "alpha")))
+                          ("by frequency" "go(\"/words?sort=freq\");" ,(equal sort "freq"))
+                          ("show pos" "go(\"/words?pos=true\");" ,show-pos)))
    (:br)
    (:table :class "word-frequency"
            (iter (for (word frequency) in (if (and sort (string= sort "freq"))

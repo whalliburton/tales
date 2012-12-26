@@ -11,6 +11,7 @@ div.chapter-link:hover { background-color:#111; }
 
 div.page-button { cursor:pointer; padding:5px 10px 5px 10px; }
 div.page-button:hover { background-color:#333; }
+div.page-button-selected { cursor:default; padding:5px 10px 5px 10px; background-color:#555; }
 
 body { font-family:"Futura"; background:black; color:white; padding:20px; }
 
