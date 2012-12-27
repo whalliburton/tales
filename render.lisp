@@ -157,7 +157,8 @@
                (:div :class "paragraphs-with-word"
                      (iter (for paragraph in paragraphs)
                            (htm (:div :class "word-p"
-                                      :onclick (format nil "wordText(~A,~S);" (id paragraph) word)
+                                      :onclick (format nil "wordText(~A,~S);" (id paragraph)
+                                                       (who:escape-string word))
                                       (render-paragraph-excerpt paragraph word stream)))))))))
 
 (defun render-word-page (word-node)
