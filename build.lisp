@@ -44,7 +44,7 @@
                  (char= char #\-)
                  (and (char= char #\,) next-char (digit-char-p next-char))
                  ;; handle apostrophes inside single quoted names
-                 (and (char= char #\') next-char acc (char= next-char #\s))
+                 (and (char= char #\') next-char acc (member next-char '(#\s #\t) :test #'char=))
                  ;; handle double quotes inside single quoted names
                  (and (char= char #\") next-char (char= next-char #\-))
                  (and (char= char #\") prev-char (char= prev-char #\-))
