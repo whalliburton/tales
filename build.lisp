@@ -71,7 +71,8 @@
 
 (defun paragraph-words (text)
   (iter (for word in (split-paragraph text))
-        (when (and (> (length word) 1) (not (member word *ignore-words* :test #'string=)))
+        (when (and (> (length word) 1) (not (member word *ignore-words* :test #'string=))
+                   (not (char= (char word 0) #\<)))
           (collect word))))
 
 (defparameter *word-ids* (make-hash-table :test 'equal))
