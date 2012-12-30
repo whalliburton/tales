@@ -44,11 +44,14 @@
 
 (defvar *words-alphabetical* nil)
 (defvar *words-by-frequency* nil)
+(defvar *words-by-length* nil)
 
 (defun initialize-word-lists ()
   (create-words-index)
   (setf *words-alphabetical* (list-word-frequency)
-        *words-by-frequency* (list-word-frequency t)))
+        *words-by-frequency* (list-word-frequency t)
+        *words-by-length* (stable-sort (copy-list *words-alphabetical*)
+                                       #'< :key (lambda (el) (length (car el))))))
 
 (defun pos-string (word)
   (let ((pos (pos word)))
@@ -65,12 +68,15 @@
                                           ,(or (and (null sort) (null show-pos))
                                                (equal sort "alpha")))
                           ("by frequency" "go(\"/words?sort=freq\");" ,(equal sort "freq"))
-                          ("show pos" "go(\"/words?pos=true\");" ,show-pos)))
+                          ("show pos" "go(\"/words?pos=true\");" ,show-pos)
+                          ("by length" "go(\"/words?sort=length\");" ,(equal sort "length"))))
    (:br)
    (:table :class "word-frequency"
-           (iter (for (word frequency) in (if (and sort (string= sort "freq"))
-                                            *words-by-frequency*
-                                            *words-alphabetical*))
+           (iter (for (word frequency) in
+                      (cond
+                        ((and sort (string= sort "freq")) *words-by-frequency*)
+                        ((and sort (string= sort "length")) *words-by-length*)
+                        (t *words-alphabetical*)))
                  (htm (:tr :class "word-link"
                            :onclick (format nil "visit(\"~A\");" (get-word-id word))
                            (:td (esc word))
