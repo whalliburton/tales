@@ -2,6 +2,7 @@
   :serial t
   :components ((:static-file "tales.asd")
                (:file "package")
+               (:file "rpc-sail")
                (:file "utility")
                (:file "parse")
                (:file "build")
